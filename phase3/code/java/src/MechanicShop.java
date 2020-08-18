@@ -35,9 +35,6 @@ public class MechanicShop{
 	private Connection _connection = null;
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-	// starting id at 500 since last customer in CSV file has ID of 499
-	public int user_id = 500;
-	
 	public MechanicShop(String dbname, String dbport, String user, String passwd) throws SQLException {
 		System.out.print("Connecting to database...");
 		try{
@@ -324,27 +321,35 @@ public class MechanicShop{
 	public static void AddCustomer(MechanicShop esql){//1
 		try {
 			String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (";
-			String user_id_as_string = String.valueOf(user_id);
-			query += user_id_as_string;
-			user_id++;
+			
+			// assign id as random int between 500 and max int value
+			// 500 as min since the last customer has an id of 499
+			int max = Integer.MAX_VALUE; 
+			int min = 500;
+			int userId = (int)(Math.random() * (max - min + 1) + min);
 
-			System.out.print("Enter first name: ")
+			String userIdString = String.valueOf(userId);
+			query += userIdString;
+
+			System.out.print("Enter first name: ");
 			String input = in.readLine();
 			query += ", " + input;
 
-			System.out.print("Enter last name: ")
+			System.out.print("Enter last name: ");
 			input = in.readLine();
 			query += ", " + input;
 
-			System.out.print("Enter phone: ")
+			System.out.print("Enter phone: ");
 			input = in.readLine();
 			query += ", " + input;
 
-			System.out.print("Enter address: ")
+			System.out.print("Enter address: ");
 			input = in.readLine();
 			query += ", " + input + ");";
 
 			System.out.print(query);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 	
