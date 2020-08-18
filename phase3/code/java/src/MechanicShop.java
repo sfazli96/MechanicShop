@@ -320,34 +320,34 @@ public class MechanicShop{
 
 	public static void AddCustomer(MechanicShop esql){//1
 		try {
-			String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (";
+			String custQuery = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (";
 			
-			// assign id as random int between 500 and max int value
-			// 500 as min since the last customer has an id of 499
-			int max = Integer.MAX_VALUE; 
-			int min = 500;
-			int userId = (int)(Math.random() * (max - min + 1) + min);
+			// get the id of the last customer in database
+			String idQuery = "SELECT MAX(id) FROM Customer;";
+			List<List<String>> maxIdList = esql.executeQueryAndReturnResult(idQuery); 
+			String maxId = (maxIdList.get(0).get(0));
 
+			int userId = Integer.parseInt(maxId) + 1;
 			String userIdString = String.valueOf(userId);
-			query += userIdString;
+			custQuery += userIdString;
 
 			System.out.print("Enter first name: ");
 			String input = in.readLine();
-			query += ", " + input;
+			custQuery += ", " + input;
 
 			System.out.print("Enter last name: ");
 			input = in.readLine();
-			query += ", " + input;
+			custQuery += ", " + input;
 
 			System.out.print("Enter phone: ");
 			input = in.readLine();
-			query += ", " + input;
+			custQuery += ", " + input;
 
 			System.out.print("Enter address: ");
 			input = in.readLine();
-			query += ", " + input + ");";
+			custQuery += ", " + input + ");";
 
-			System.out.print(query);
+			System.out.print(custQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
