@@ -34,6 +34,9 @@ public class MechanicShop{
 	//reference to physical database connection
 	private Connection _connection = null;
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+	// starting id at 500 since last customer in CSV file has ID of 499
+	public int user_id = 500;
 	
 	public MechanicShop(String dbname, String dbport, String user, String passwd) throws SQLException {
 		System.out.print("Connecting to database...");
@@ -304,8 +307,45 @@ public class MechanicShop{
 		return input;
 	}//end readChoice
 	
+	/* example query
+	      try{
+         	String query = "SELECT * FROM Catalog WHERE cost < ";
+         	System.out.print("\tEnter cost: $");
+        	String input = in.readLine();
+         	query += input;
+
+         	int rowCount = esql.executeQuery(query);
+        	System.out.println ("total row(s): " + rowCount);
+      } catch(Exception e){
+         	System.err.println (e.getMessage());
+      }
+	*/
+
 	public static void AddCustomer(MechanicShop esql){//1
-		
+		try {
+			String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (";
+			String user_id_as_string = String.valueOf(user_id);
+			query += user_id_as_string;
+			user_id++;
+
+			System.out.print("Enter first name: ")
+			String input = in.readLine();
+			query += ", " + input;
+
+			System.out.print("Enter last name: ")
+			input = in.readLine();
+			query += ", " + input;
+
+			System.out.print("Enter phone: ")
+			input = in.readLine();
+			query += ", " + input;
+
+			System.out.print("Enter address: ")
+			input = in.readLine();
+			query += ", " + input + ");";
+
+			System.out.print(query);
+		}
 	}
 	
 	public static void AddMechanic(MechanicShop esql){//2
