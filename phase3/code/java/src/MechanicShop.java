@@ -320,16 +320,19 @@ public class MechanicShop{
 
 	public static void AddCustomer(MechanicShop esql){//1
 		try {
-			String custQuery = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (";
+			String custQuery = "INSERT INTO customer (fname, lname, phone, address) VALUES (";
 			
 			// get the id of the last customer in database
+			/*
 			String idQuery = "SELECT MAX(id) FROM Customer;";
 			List<List<String>> maxIdList = esql.executeQueryAndReturnResult(idQuery); 
 			String maxId = (maxIdList.get(0).get(0));
+			
 
 			int userId = Integer.parseInt(maxId) + 1;
 			String userIdString = String.valueOf(userId);
 			custQuery += userIdString;
+			*/
 
 			System.out.print("Enter first name: ");
 			String input = in.readLine();
@@ -354,15 +357,79 @@ public class MechanicShop{
 	}
 	
 	public static void AddMechanic(MechanicShop esql){//2
-		
+
+		try {
+			String mechQuery = "INSERT INTO mechanic (fname, lname, experience) VALUES(";
+
+			System.out.print("Enter first name: ");
+			String input = in.readLine();
+			mechQuery += ", " + input;
+
+			System.out.print("Enter last name: ");
+			input = in.readLine();
+			mechQuery += ", " + input;
+
+			System.out.print("Enter years of experience (Format XXXX): ");
+			input = in.readLine();
+			mechQuery += ", " + input + ");";
+
+			System.out.print(mechQuery);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void AddCar(MechanicShop esql){//3
-		
+		try {
+			String carQuery = "INSERT INTO car (vin, make, model, year) VALUES(";
+
+			System.out.print("Enter VIN: ");
+			String input = in.readLine();
+			carQuery += ", " + input;
+
+			String queryForMatchingVIN = "SELECT vin FROM car WHERE vin = " + input + ";";
+			if(executeQuery(queryForMatchingVIN) >= 1) {
+				System.out.print("VIN already exists in database");
+				return;
+			}
+
+			System.out.print("Enter make: ");
+			input = in.readLine();
+			carQuery += ", " + input;
+
+			System.out.print("Enter model: ");
+			input = in.readLine();
+			carQuery += ", " + input;
+
+			System.out.print("Enter year (Format XXXX): ");
+			input = in.readLine();
+			carQuery += ", " + input + ");";
+
+			System.out.print(carQuery);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void InsertServiceRequest(MechanicShop esql){//4
-		
+		try{
+			// get last name
+			String lastName
+			boolean cont = true;
+			do {
+				System.out.print("Enter a last name: ");
+				lastName = in.readLine();
+				System.out.print(lastName + "; is this correct? (Y/N): ");
+				String yn = in.readLine();
+
+				if(yn == 'Y' || yn == 'y') {
+					cont = false;
+				}
+			} while(cont);
+
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5

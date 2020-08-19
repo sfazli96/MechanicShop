@@ -98,7 +98,7 @@ COPY Customer (
 	phone,
 	address
 )
-FROM 'customer.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\customer.csv'
 WITH DELIMITER ',';
 
 COPY Mechanic (
@@ -107,7 +107,7 @@ COPY Mechanic (
 	lname,
 	experience
 )
-FROM 'mechanic.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\mechanic.csv'
 WITH DELIMITER ',';
 
 COPY Car (
@@ -116,7 +116,7 @@ COPY Car (
 	model,
 	year
 )
-FROM 'car.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\car.csv'
 WITH DELIMITER ',';
 
 COPY Owns (
@@ -124,7 +124,7 @@ COPY Owns (
 	customer_id,
 	car_vin
 )
-FROM 'owns.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\owns.csv'
 WITH DELIMITER ',';
 
 COPY Service_Request (
@@ -135,7 +135,7 @@ COPY Service_Request (
 	odometer,
 	complain
 )
-FROM 'service_request.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\service_request.csv'
 WITH DELIMITER ',';
 
 COPY Closed_Request (
@@ -146,5 +146,5 @@ COPY Closed_Request (
 	comment,
 	bill
 )
-FROM 'closed_request.csv'
+FROM 'F:\Dev\databases\MechanicShop\phase3\code\data\closed_request.csv'
 WITH DELIMITER ',';
