@@ -349,7 +349,6 @@ public class MechanicShop{
 			input = in.readLine();
 			custQuery += ", " + "'" + input + "'" + ");";
 
-			System.out.print(custQuery + '\n');
 			esql.executeUpdate(custQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -383,7 +382,6 @@ public class MechanicShop{
 			input = in.readLine();
 			mechQuery += ", " + "'" + input + "'" + ");";
 		
-			System.out.print(mechQuery);
 			esql.executeUpdate(mechQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -398,22 +396,26 @@ public class MechanicShop{
 			String input = in.readLine();
 
 			String queryForMatchingVIN = "SELECT * FROM car WHERE vin=" + "'" + input + "'" + ";";
-			int rows = esql.executeQueryAndPrintResult(queryForMatchingVIN);
+			if(esql.executeQueryAndPrintResult(queryForMatchingVIN) >= 1) {
+				System.out.println("VIN already exists in database");
+				return;
+			}
+			carQuery += "'" + input + "'";
 
-/*
 			System.out.print("Enter make: ");
 			input = in.readLine();
-			carQuery += ", " + input;
+			carQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter model: ");
 			input = in.readLine();
-			carQuery += ", " + input;
+			carQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter year (Format XXXX): ");
 			input = in.readLine();
-			carQuery += ", " + input + ");";
-*/
-			System.out.print(rows);
+			carQuery += ", " + "'" + input + "'" + ");";
+			
+			System.out.print(carQuery);
+			esql.executeUpdate(carQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -435,13 +437,40 @@ public class MechanicShop{
 				}
 			} while(cont);
 
+			String queryLastName = "SELECT * FROM customer WHERE lname='" + lastName + "';";
+			int rows = esql.executeQuery(queryLastName);
+			if(rows < 1) {
+				System.out.println("Last name not in database");
+				System.out.print("Create new customer? (Y/N): ");
+				String yn = in.readLine();
+
+				if(yn.equals("Y") || yn.equals("y")) {
+					AddCustomer(esql);
+					System.out.println("\n\ncreating...\n");
+				}
+				else {
+					System.out.println("Ok, returning to main menu");
+					return;
+				}
+					
+			}
+			
+			rows = esql.executeQueryAndPrintResult(queryLastName);
+			String chosenId;
+			System.out.print("Enter the correct ID of your customer: ");
+			chosenId = in.readLine();	
+
+			System.out.println("\nListing customer's cars (vin):");
+			String custCarQuery = "SELECT o.car_vin, c.make, c.model FROM owns o, car c WHERE o.customer_id='" + chosenId + "' AND o.car_vin=c.vin;";
+			esql.executeQueryAndPrintResult(custCarQuery);
+
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
-	
+
 	}
 	
 	public static void ListCustomersWithBillLessThan100(MechanicShop esql){//6
