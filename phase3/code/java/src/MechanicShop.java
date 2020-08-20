@@ -414,7 +414,6 @@ public class MechanicShop{
 			input = in.readLine();
 			carQuery += ", " + "'" + input + "'" + ");";
 			
-			System.out.print(carQuery);
 			esql.executeUpdate(carQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -462,7 +461,15 @@ public class MechanicShop{
 
 			System.out.println("\nListing customer's cars (vin):");
 			String custCarQuery = "SELECT o.car_vin, c.make, c.model FROM owns o, car c WHERE o.customer_id='" + chosenId + "' AND o.car_vin=c.vin;";
+
 			esql.executeQueryAndPrintResult(custCarQuery);
+			System.out.print("Create new car? (Y/N)");
+
+			String yn  = in.readLine();
+			if(yn.equals("Y") || yn.equals("y")) {
+				AddCar(esql);
+				System.out.println("\n\ncreating...\n");
+			}
 
 			System.out.print("Enter the VIN of the problem car: ");
 			String carVin = in.readLine();
@@ -485,7 +492,9 @@ public class MechanicShop{
 			insertQuery += ", '" + odometer + "'";
 			insertQuery += ", '" + complain + "');";
 
-			System.out.println(insertQuery);
+			esql.executeUpdate(insertQuery);
+
+			System.out.println("\n\nService request opened");
 
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
