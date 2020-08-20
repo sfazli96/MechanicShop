@@ -242,7 +242,7 @@ public class MechanicShop{
 			
 			boolean keepon = true;
 			while(keepon){
-				System.out.println("MAIN MENU");
+				System.out.println("\nMAIN MENU");
 				System.out.println("---------");
 				System.out.println("1. AddCustomer");
 				System.out.println("2. AddMechanic");
@@ -320,10 +320,9 @@ public class MechanicShop{
 
 	public static void AddCustomer(MechanicShop esql){//1
 		try {
-			String custQuery = "INSERT INTO customer (fname, lname, phone, address) VALUES (";
+			String custQuery = "INSERT INTO customer (id, fname, lname, phone, address) VALUES (";
 			
 			// get the id of the last customer in database
-			/*
 			String idQuery = "SELECT MAX(id) FROM Customer;";
 			List<List<String>> maxIdList = esql.executeQueryAndReturnResult(idQuery); 
 			String maxId = (maxIdList.get(0).get(0));
@@ -331,26 +330,27 @@ public class MechanicShop{
 
 			int userId = Integer.parseInt(maxId) + 1;
 			String userIdString = String.valueOf(userId);
-			custQuery += userIdString;
-			*/
+			custQuery += "'" + userIdString + "'";
+	
 
 			System.out.print("Enter first name: ");
 			String input = in.readLine();
-			custQuery += ", " + input;
+			custQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter last name: ");
 			input = in.readLine();
-			custQuery += ", " + input;
+			custQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter phone: ");
 			input = in.readLine();
-			custQuery += ", " + input;
+			custQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter address: ");
 			input = in.readLine();
-			custQuery += ", " + input + ");";
+			custQuery += ", " + "'" + input + "'" + ");";
 
-			System.out.print(custQuery);
+			System.out.print(custQuery + '\n');
+			esql.executeUpdate(custQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -359,21 +359,32 @@ public class MechanicShop{
 	public static void AddMechanic(MechanicShop esql){//2
 
 		try {
-			String mechQuery = "INSERT INTO mechanic (fname, lname, experience) VALUES(";
+			String mechQuery = "INSERT INTO mechanic (id, fname, lname, experience) VALUES(";
+			
+			// get the id of the last mech in database
+			String idQuery = "SELECT MAX(id) FROM mechanic;";
+			List<List<String>> maxIdList = esql.executeQueryAndReturnResult(idQuery); 
+			String maxId = (maxIdList.get(0).get(0));
+			
+
+			int userId = Integer.parseInt(maxId) + 1;
+			String userIdString = String.valueOf(userId);
+			mechQuery += "'" + userIdString + "'";
 
 			System.out.print("Enter first name: ");
 			String input = in.readLine();
-			mechQuery += ", " + input;
+			mechQuery += ", " + "'" + input + "'";
 
 			System.out.print("Enter last name: ");
 			input = in.readLine();
-			mechQuery += ", " + input;
+			mechQuery += ", " + "'" + input + "'";
 
-			System.out.print("Enter years of experience (Format XXXX): ");
+			System.out.print("Enter years of experience: ");
 			input = in.readLine();
-			mechQuery += ", " + input + ");";
-
+			mechQuery += ", " + "'" + input + "'" + ");";
+		
 			System.out.print(mechQuery);
+			esql.executeUpdate(mechQuery);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -385,14 +396,11 @@ public class MechanicShop{
 
 			System.out.print("Enter VIN: ");
 			String input = in.readLine();
-			carQuery += ", " + input;
 
-			String queryForMatchingVIN = "SELECT vin FROM car WHERE vin = " + input + ";";
-			if(executeQuery(queryForMatchingVIN) >= 1) {
-				System.out.print("VIN already exists in database");
-				return;
-			}
+			String queryForMatchingVIN = "SELECT * FROM car WHERE vin=" + "'" + input + "'" + ";";
+			int rows = esql.executeQueryAndPrintResult(queryForMatchingVIN);
 
+/*
 			System.out.print("Enter make: ");
 			input = in.readLine();
 			carQuery += ", " + input;
@@ -404,8 +412,8 @@ public class MechanicShop{
 			System.out.print("Enter year (Format XXXX): ");
 			input = in.readLine();
 			carQuery += ", " + input + ");";
-
-			System.out.print(carQuery);
+*/
+			System.out.print(rows);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -414,7 +422,7 @@ public class MechanicShop{
 	public static void InsertServiceRequest(MechanicShop esql){//4
 		try{
 			// get last name
-			String lastName
+			String lastName;
 			boolean cont = true;
 			do {
 				System.out.print("Enter a last name: ");
@@ -422,7 +430,7 @@ public class MechanicShop{
 				System.out.print(lastName + "; is this correct? (Y/N): ");
 				String yn = in.readLine();
 
-				if(yn == 'Y' || yn == 'y') {
+				if(yn.equals("Y") || yn.equals("y")) {
 					cont = false;
 				}
 			} while(cont);
@@ -433,7 +441,7 @@ public class MechanicShop{
 	}
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
-		
+	
 	}
 	
 	public static void ListCustomersWithBillLessThan100(MechanicShop esql){//6
