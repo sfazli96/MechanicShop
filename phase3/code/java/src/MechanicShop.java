@@ -494,7 +494,7 @@ public class MechanicShop{
 
 			esql.executeUpdate(insertQuery);
 
-			System.out.println("\n\nService request opened");
+			System.out.println("\n\nService request opened\n");
 
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
