@@ -464,10 +464,34 @@ public class MechanicShop{
 			String custCarQuery = "SELECT o.car_vin, c.make, c.model FROM owns o, car c WHERE o.customer_id='" + chosenId + "' AND o.car_vin=c.vin;";
 			esql.executeQueryAndPrintResult(custCarQuery);
 
+			System.out.print("Enter the VIN of the problem car: ");
+			String carVin = in.readLine();
+			System.out.print("Enter the problem: ");
+			String complain = in.readLine();
+			System.out.print("Enter the date: ");
+			String date = in.readLine();
+			System.out.print("enter odometer reading: ");
+			String odometer = in.readLine();
+
+			String insertQuery = "INSERT INTO service_request (rid, customer_id, car_vin, date, odometer, complain) VALUES (";
+			
+			// get the id of the last sr in database
+			String idQuery = "SELECT MAX(rid) FROM service_request;";
+			String userIdString = MaxID(esql, idQuery);
+			insertQuery += "'" + userIdString + "'";
+			insertQuery += ", '" + chosenId + "'";
+			insertQuery += ", '" + carVin + "'";
+			insertQuery += ", '" + date + "'";
+			insertQuery += ", '" + odometer + "'";
+			insertQuery += ", '" + complain + "');";
+
+			System.out.println(insertQuery);
+
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
+
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
 
@@ -493,6 +517,23 @@ public class MechanicShop{
 	public static void ListCustomersInDescendingOrderOfTheirTotalBill(MechanicShop esql){//9
 		//
 		
+	}
+	
+	public static String MaxID(MechanicShop esql, String idQuery) {
+		try {
+			List<List<String>> maxIdList = esql.executeQueryAndReturnResult(idQuery); 
+			String maxId = (maxIdList.get(0).get(0));
+			
+
+			int userId = Integer.parseInt(maxId) + 1;
+			String userIdString = String.valueOf(userId);
+
+			return userIdString;
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+
+		return "";
 	}
 	
 }
