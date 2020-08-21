@@ -394,6 +394,7 @@ public class MechanicShop{
 
 			System.out.print("Enter VIN: ");
 			String input = in.readLine();
+			String vin = input;
 
 			String queryForMatchingVIN = "SELECT * FROM car WHERE vin=" + "'" + input + "'" + ";";
 			if(esql.executeQueryAndPrintResult(queryForMatchingVIN) >= 1) {
@@ -415,7 +416,64 @@ public class MechanicShop{
 			carQuery += ", " + "'" + input + "'" + ");";
 			
 			esql.executeUpdate(carQuery);
+
+			makeOwner(esql, vin);
 		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void makeOwner(MechanicShop esql, String vin) {
+		try {
+			String lastName;
+			boolean cont = true;
+			do {
+				System.out.print("Enter car owner's last name: ");
+				lastName = in.readLine();
+				System.out.print(lastName + "; is this correct? (Y/N): ");
+				String yn = in.readLine();
+
+				if(yn.equals("Y") || yn.equals("y")) {
+					cont = false;
+				}
+			} while(cont);
+
+			String queryLastName = "SELECT * FROM customer WHERE lname='" + lastName + "';";
+			int rows = esql.executeQuery(queryLastName);
+			if(rows < 1) {
+				System.out.println("Last name not in database");
+				System.out.print("Create new customer? (Y/N): ");
+				String yn = in.readLine();
+
+				if(yn.equals("Y") || yn.equals("y")) {
+					AddCustomer(esql);
+					System.out.println("\n\ncreating...\n");
+				}
+				else {
+					System.out.println("Ok, returning to main menu");
+					return;
+				}
+			}
+			
+			rows = esql.executeQueryAndPrintResult(queryLastName);
+			String chosenId;
+			System.out.print("Enter the ID of your customer: ");
+			chosenId = in.readLine();	
+
+			String carQuery = "INSERT INTO owns (ownership_id, customer_id, car_vin) VALUES(";
+
+			String idQuery = "SELECT MAX(ownership_id) FROM owns;";
+			String userIdString = MaxID(esql, idQuery);
+
+			carQuery += "'" + userIdString + "'";
+			carQuery += ", '" + chosenId + "'";
+			carQuery += ", '" + vin + "');";
+
+			esql.executeUpdate(carQuery);
+
+			System.out.println("Car " + vin + " added for customer with ID " + chosenId);
+
+		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
@@ -503,7 +561,7 @@ public class MechanicShop{
 
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
-
+		//TODO
 	}
 	
 	public static void ListCustomersWithBillLessThan100(MechanicShop esql){//6
