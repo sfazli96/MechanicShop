@@ -507,25 +507,85 @@ public class MechanicShop{
 	}
 	
 	public static void ListCustomersWithBillLessThan100(MechanicShop esql){//6
-		
+		try {
+			String query = "SELECT DISTINCT cu.id, cr.date, cr.comment, cr.bill FROM closed_request cr, customer cu, service_request sr ";
+			query += "WHERE cr.bill < 100 AND cr.rid = sr.rid AND sr.customer_id = cu.id;";
+
+			int row = esql.executeQueryAndPrintResult(query);
+			if(row <= 0) {
+				System.out.println("No results returned\n");
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void ListCustomersWithMoreThan20Cars(MechanicShop esql){//7
+		try {
+			String query = "SELECT cu.fname, cu.lname FROM customer cu ";
+			query += "GROUP BY cu.id HAVING ( SELECT COUNT(*) FROM owns o ";
+			query += "WHERE o.customer_id = cu.id ) > 20;";	
 		
+			int row = esql.executeQueryAndPrintResult(query);
+			if(row <= 0) {
+				System.out.println("No results returned\n");
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void ListCarsBefore1995With50000Milles(MechanicShop esql){//8
-		
+		try{
+			String query = "SELECT c.make, c.model, c.year FROM car c, service_request sr ";
+			query += "WHERE c.vin = sr.car_vin AND sr.odometer < 50000 AND c.year < 1995;";	
+				
+			int row = esql.executeQueryAndPrintResult(query);
+			if(row <= 0) {
+				System.out.println("No results returned\n");
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void ListKCarsWithTheMostServices(MechanicShop esql){//9
 		//
-		
+		try{
+			String query = "SELECT c.make, c.model, COUNT(sr.*) FROM car c, service_request sr ";
+			query += "WHERE sr.car_vin = c.vin ";	
+			query += "GROUP BY c.vin ";	
+			query += "ORDER BY COUNT(sr.*) DESC ";	
+			query += "LIMIT ";	
+			
+			System.out.print("Enter K: ");
+			String kStr = in.readLine();
+
+			query += kStr + ";";
+			
+			int row = esql.executeQueryAndPrintResult(query);
+			if(row <= 0) {
+				System.out.println("No results returned\n");
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void ListCustomersInDescendingOrderOfTheirTotalBill(MechanicShop esql){//9
 		//
-		
+		try{
+			String query = "SELECT cu.fname, cu.lname, cr.bill FROM customer cu, closed_request cr, service_request sr ";
+			query += "WHERE cr.rid = sr.rid AND sr.customer_id = cu.id ";	
+			query += "ORDER BY cr.bill DESC;";	
+			
+			int row = esql.executeQueryAndPrintResult(query);
+			if(row <= 0) {
+				System.out.println("No results returned\n");
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static String MaxID(MechanicShop esql, String idQuery) {
